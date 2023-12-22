@@ -1,8 +1,7 @@
 const express = require('express'); // npm install express
 const session = require('express-session');
-const swaggerAutogen = require('swagger-autogen')()
+const swaggerAutogen = require('swagger-autogen');
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger_output.json');
 
 const app = express();
 
@@ -17,7 +16,7 @@ app.use(session({
 }));
 
 swaggerAutogen('./swagger_output.json', ['./server.js']);
-app.use('/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerAutogen));
 
 // Tasks
 let tasks = [
@@ -55,6 +54,7 @@ app.get('/tasks/:id', (request, response) => {
 });
 
 // verändert einen bestehenen Task und gibt diesen zurück
+// basiert auf dem Quellcode von R. Bühler (Aufgabe 4-3)
 app.patch('/tasks/:id', (request, response) => {
   const findTask = tasks.find((task) => task.id === request.params.id);
   if (findTask !== undefined) {
