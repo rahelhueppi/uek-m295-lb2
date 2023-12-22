@@ -1,4 +1,5 @@
 const express = require('express'); // npm install express
+const session = require('express-session');
 
 const app = express();
 const port = 3000;
@@ -7,6 +8,13 @@ const port = 3000;
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
+
+app.use(session({
+  secret: 'supersecret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {},
+}));
 
 // Tasks
 let tasks = [
@@ -70,22 +78,31 @@ app.delete('/tasks/:id', (request, response) => {
   }
 });
 
-// ###################### Authentifizierung  (ev. später in anderes File)
+// ###################### Authentifizierung  (ev. später in anderes File
+app.post('/login', (request, response) => {
+  const { email, password } = request.body;
+  if (email !== undefined && password === 'm295') {
+    request.session.email = email;
+    return response.status(200).json({ email: request.session.email });
+  }
+  return response.status(401).json({ error: 'Invalid credentials' });
+});
 
-// app.post('/login', (request, response) => {
-//   const { email, password } = request.body;
-//   const secretAdminCredentials = request.body;
-//   // Check the credentials against store
-//   if (
-//     email?.toLowerCase() === secretAdminCredentials.email
-//     && password === secretAdminCredentials.password
-//   ) {
-//     // Link email to session
-//     request.session.email = email;
-//     return response.status(200).json({ email: request.session.email });
-//   }
-//   return response.status(401).json({ error: 'Invalid credentials' });
-// });
+app.get('/verify', (request, response) => {
+  if (request.session.email) {
+    return response.status(200).json({ email: request.session.email });
+  }
+  return response.status(401).json({ error: 'User is not in a session' });
+});
+
+app.delete('/logout', (request, response) => {
+  if (request.session.email) {
+    // Link der Sitzung zurücksetzen
+    request.session.email = null;
+    return response.status(204).send();
+  }
+  return response.status(401).json({ error: 'Not logged in' });
+});
 
 // Server
 app.listen(port);
