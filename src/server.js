@@ -70,5 +70,22 @@ app.delete('/tasks/:id', (request, response) => {
   }
 });
 
+// ###################### Authentifizierung  (ev. später in anderes File)
+
+// app.post('/login', (request, response) => {
+//   const { email, password } = request.body;
+//   const secretAdminCredentials = request.body;
+//   // Check the credentials against store
+//   if (
+//     email?.toLowerCase() === secretAdminCredentials.email
+//     && password === secretAdminCredentials.password
+//   ) {
+//     // Link email to session
+//     request.session.email = email;
+//     return response.status(200).json({ email: request.session.email });
+//   }
+//   return response.status(401).json({ error: 'Invalid credentials' });
+// });
+
 // Server
 app.listen(port);
