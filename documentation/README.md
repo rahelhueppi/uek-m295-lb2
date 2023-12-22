@@ -1,7 +1,7 @@
 # LBb ÜK-Modul 295
 
-Name des Projektes: LBb m295
-Autor: Rahel Hüppi
+- Name des Projektes: LBb m295
+- Autor: Rahel Hüppi
 
 # Beschreibung
 Das ist das Abschlussprojekt vom Ük-Modul 295. Mit Endpunkten können zum Beispiel Tasks hinzugefügt, angesehen oder gelöscht werden. Für die API-Dokumentation wurde Swagger verwendet. 
@@ -15,8 +15,9 @@ Das ist das Abschlussprojekt vom Ük-Modul 295. Mit Endpunkten können zum Beisp
 
 # Runtime
 - Um die Anwendung zu starten muss man 
-  - 1. In das richtige Verzeichnis wechseln (cd src)
-  - 2. Diesen Befehl im Terminal ausführen: node server.js
+  1. In das richtige Verzeichnis wechseln (cd src)
+  2. Diesen Befehl im Terminal ausführen: node server.js
+  3. Die Endpunkte können in https://hoppscotch.io/ ausprobiert werden. 
 
 # Endpunkte zu den Tasks
 - GET /tasks: Gibt eine Liste aller Aufgaben zurück.
