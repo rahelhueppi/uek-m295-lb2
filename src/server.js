@@ -1,14 +1,14 @@
 const express = require('express'); // npm install express
 const session = require('express-session');
+const swaggerAutogen = require('swagger-autogen')()
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger_output.json');
 
 const app = express();
-const port = 3000;
 
-// Express JSON Middleware
+// Middlewares
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
-
 app.use(session({
   secret: 'supersecret',
   resave: false,
@@ -16,9 +16,14 @@ app.use(session({
   cookie: {},
 }));
 
+swaggerAutogen('./swagger_output.json', ['./server.js']);
+app.use('/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 // Tasks
 let tasks = [
-  { id: '01', title: 'hallo' },
+  {
+    id: '01', title: 'documentation', author: 'Rahel', creationDate: '22.12.2023', fulfillmentDate: '',
+  },
 ]; // { id: "", title: "", author: "", creationDate: "", fulfillmentDate: "" }
 
 // gibt eine Liste aller Tasks zurück
@@ -35,7 +40,7 @@ app.post('/tasks', (request, response) => {
     tasks.push(request.body);
     response.status(201).send(tasks);
   } else {
-    response.status(400).send('Bad Request');
+    response.status(400).send({ error: 'Bad Request' });
   }
 });
 
@@ -45,7 +50,7 @@ app.get('/tasks/:id', (request, response) => {
   if (findTask !== undefined) {
     response.status(200).send(findTask);
   } else {
-    response.status(404).send('Task not found');
+    response.status(404).send({ error: 'Task not found' });
   }
 });
 
@@ -66,7 +71,6 @@ app.patch('/tasks/:id', (request, response) => {
 });
 
 // löscht einen bestehenden Task aus der Liste
-// ########### noch einfügen, wenn es die id nicht gibt
 app.delete('/tasks/:id', (request, response) => {
   const { id } = request.params;
   const deletedTask = tasks.find((task) => task.id === request.params.id);
@@ -78,7 +82,7 @@ app.delete('/tasks/:id', (request, response) => {
   }
 });
 
-// ###################### Authentifizierung  (ev. später in anderes File
+// Authentifizierung
 app.post('/login', (request, response) => {
   const { email, password } = request.body;
   if (email !== undefined && password === 'm295') {
@@ -105,4 +109,4 @@ app.delete('/logout', (request, response) => {
 });
 
 // Server
-app.listen(port);
+app.listen(3000);
